@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>element-watermark</title>
+
+</head>
+
+<body>
+  <div class="app">
+    <h1>dnhyxc</h1>
+    <p>hello</p>
+  </div>
+  <script>
+    function cssHelper(el, prototype) {
+      for (let i in prototype) {
+        el.style[i] = prototype[i]
+      }
+    }
+    const waterWrapper = document.createElement('div');
+    cssHelper(waterWrapper, {
+      position: 'fixed',
+      top: '0px',
+      right: '0px ',
+      bottom: '0px',
+      left: '0px',
+      overflow: 'hidden',
+      display: 'flex',
+      'flex-wrap': 'wrap',
+      'pointer-events': 'none'
+    })
+    const waterHeight = 100;
+    const waterWidth = 180;
+    const {
+      clientWidth,
+      clientHeight
+    } = document.documentElement || document.body;
+    // 计算出水印在横向及竖向能放几个
+    const column = Math.ceil(clientWidth / waterWidth);
+    const rows = Math.ceil(clientHeight / waterHeight);
+    console.log(clientWidth, clientHeight); // 913 937
+    console.log(column, rows); // 6 10
+
+    function createItem() {
+      const item = document.createElement('div')
+      item.innerHTML = 'dnhyxc'
+      cssHelper(item, {
+        position: 'absolute',
+        top: `50px`,
+        left: `50px`,
+        fontSize: `16px`,
+        color: '#000',
+        lineHeight: 1.5,
+        opacity: 0.1,
+        transform: `rotate(-15deg)`,
+        transformOrigin: '0 0',
+        userSelect: 'none',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+      })
+      return item
+    }
+    for (let i = 0; i < column * rows; i++) {
+      const wrap = document.createElement('div');
+      cssHelper(wrap, Object.create({
+        position: 'relative',
+        width: `${waterWidth}px`,
+        height: `${waterHeight}px`,
+        border: '1px solid #ccc',
+        flex: `0 0 ${waterWidth}px`,
+        overflow: 'hidden',
+      }));
+      wrap.appendChild(createItem());
+      waterWrapper.appendChild(wrap)
+    }
+    document.body.appendChild(waterWrapper)
+  </script>
+</body>
+
+</html>
